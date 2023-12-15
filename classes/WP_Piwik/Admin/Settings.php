@@ -126,11 +126,11 @@ class Settings extends \WP_Piwik\Admin {
 				'cloud' => __ ( 'Cloud-hosted (InnoCraft Cloud, *.innocraft.cloud)', 'wp-piwik' )
 		), $description, 'jQuery(\'tr.wp-piwik-mode-option\').addClass(\'hidden\'); jQuery(\'.wp-piwik-mode-option-\' + jQuery(\'#piwik_mode\').val()).removeClass(\'hidden\');', false, '', self::$wpPiwik->isConfigured () );
 
-		$this->showInput ( 'piwik_url', __ ( 'Matomo URL', 'wp-piwik' ), __( 'Enter your Matomo URL. This is the same URL you use to access your Matomo instance, e.g. http://www.example.com/matomo/.', 'wp-piwik' ), self::$settings->getGlobalOption ( 'piwik_mode' ) != 'http', 'wp-piwik-mode-option', 'http', self::$wpPiwik->isConfigured (), true );
+		$this->showInput ( 'piwik_url', __ ( 'Matomo URL', 'wp-piwik' ), __( 'Enter your Matomo URL. This is the same URL you use to access your Matomo instance, e.g. http://www.example.com/matomo/.', 'wp-piwik' ), self::$settings->getGlobalOption ( 'piwik_mode' ) != 'http', 'wp-piwik-mode-option', 'http', self::$wpPiwik->isConfigured (), true, "url");
 		$this->showInput ( 'piwik_path', __ ( 'Matomo path', 'wp-piwik' ), __( 'Enter the file path to your Matomo instance, e.g. /var/www/matomo/.', 'wp-piwik' ), self::$settings->getGlobalOption ( 'piwik_mode' ) != 'php', 'wp-piwik-mode-option', 'php', self::$wpPiwik->isConfigured (), true );
 		$this->showInput ( 'piwik_user', __ ( 'Innocraft subdomain', 'wp-piwik' ), __( 'Enter your InnoCraft Cloud subdomain. It is also part of your URL: https://SUBDOMAIN.innocraft.cloud.', 'wp-piwik' ), self::$settings->getGlobalOption ( 'piwik_mode' ) != 'cloud', 'wp-piwik-mode-option', 'cloud', self::$wpPiwik->isConfigured () );
         $this->showInput ( 'matomo_user', __ ( 'Matomo subdomain', 'wp-piwik' ), __( 'Enter your Matomo Cloud subdomain. It is also part of your URL: https://SUBDOMAIN.matomo.cloud.', 'wp-piwik' ), self::$settings->getGlobalOption ( 'piwik_mode' ) != 'cloud-matomo', 'wp-piwik-mode-option', 'cloud-matomo', self::$wpPiwik->isConfigured () );
-		$this->showInput ( 'piwik_token', __ ( 'Auth token', 'wp-piwik' ), __( 'Enter your Matomo auth token here. It is an alphanumerical code like 0a1b2c34d56e78901fa2bc3d45678efa.', 'wp-piwik' ).' '.sprintf ( __ ( 'See %sWP-Matomo FAQ%s.', 'wp-piwik' ), '<a href="https://wordpress.org/plugins/wp-piwik/faq/" target="_BLANK">', '</a>' ), false, '', '', self::$wpPiwik->isConfigured (), true );
+		$this->showInput ( 'piwik_token', __ ( 'Auth token', 'wp-piwik' ), __( 'Enter your Matomo auth token here. It is an alphanumerical code like 0a1b2c34d56e78901fa2bc3d45678efa.', 'wp-piwik' ).' '.sprintf ( __ ( 'See %sWP-Matomo FAQ%s.', 'wp-piwik' ), '<a href="https://wordpress.org/plugins/wp-piwik/faq/" target="_BLANK">', '</a>' ), false, '', '', self::$wpPiwik->isConfigured (), true, "password" );
 
 		// Site configuration
 		$piwikSiteId = self::$wpPiwik->isConfigured () ? self::$wpPiwik->getPiwikSiteId () : false;
@@ -505,11 +505,14 @@ class Settings extends \WP_Piwik\Admin {
 	 * @param string $rowName define a class name to access the specific option row by javascript (default: empty)
 	 * @param boolean $hideDescription $hideDescription set to false to show description initially (default: true)
 	 * @param boolean $wide Create a wide box (default: false)
+     * @param string $inputType Set the type of the input field (default: text)
 	 */
-	private function showInput($id, $name, $description, $isHidden = false, $groupName = '', $rowName = false, $hideDescription = true, $wide = false) {
-        $this->showInputWrapper($id, $name, $description, $isHidden, $groupName, $hideDescription, function() use ($id) {
+	private function showInput($id, $name, $description, $isHidden = false, $groupName = '', $rowName = false, $hideDescription = true, $wide = false, $inputType = "text") {
+        $this->showInputWrapper($id, $name, $description, $isHidden, $groupName, $hideDescription, function() use (
+            $id, $inputType
+        ) {
             ?>
-            <input name="wp-piwik[<?=$id?>]" id="<?=$id?>" value="<?=htmlentities(self::$settings->getGlobalOption( $id ), ENT_QUOTES, 'UTF-8', false)?>" >
+            <input name="wp-piwik[<?=$id?>]" id="<?=$id?>" value="<?=htmlentities(self::$settings->getGlobalOption( $id ), ENT_QUOTES, 'UTF-8', false)?>" type="<?=$inputType?>">
             <?php
         }, $rowName);
 	}

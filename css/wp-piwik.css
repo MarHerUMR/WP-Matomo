@@ -11,7 +11,10 @@
 	display: block;
 }
 
-.wp-piwik-input-row input[type=text], .wp-piwik-input-row input:not([type]) {
+.wp-piwik-input-row input[type=text],
+.wp-piwik-input-row input[type=password],
+.wp-piwik-input-row input[type=url],
+.wp-piwik-input-row input:not([type]) {
 	width: 70%;
 }
 
